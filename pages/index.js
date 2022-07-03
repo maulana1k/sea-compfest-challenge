@@ -72,10 +72,5 @@ export async function getServerSideProps(c) {
     };
   } catch (err) {
     console.log("err:", err);
-    // return {
-    //   props: {
-    //     db: "not connected",
-    //   },
-    // };
   }
 }

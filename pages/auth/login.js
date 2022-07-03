@@ -24,7 +24,7 @@ function Login({ host }) {
   const submit = (e) => {
     e.preventDefault();
     axios
-      .post(host + "/api/auth/login", { id, password })
+      .post("/api/auth/login", { id, password })
       .then((res) => {
         toast({
           title: "Login succesfull",
@@ -102,10 +102,21 @@ function Login({ host }) {
 
 export default Login;
 
-export const getServerSideProps = async (c) => {
-  return {
-    props: {
-      host: "http://" + c.req.headers.host,
-    },
-  };
-};
+export async function getServerSideProps(c) {
+  try {
+    const db = await getDb();
+    let host;
+    if (process.env.NODE_ENV === "development") {
+      host = "http://" + c.req.headers.host``;
+    } else if (process.env.NODE_ENV === "production") {
+      host = process.env.HOST;
+    }
+    return {
+      props: {
+        host,
+      },
+    };
+  } catch (err) {
+    console.log("err:", err);
+  }
+}

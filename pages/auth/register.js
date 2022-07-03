@@ -38,7 +38,7 @@ function Register({ host }) {
       return;
     }
     axios
-      .post(host + "/api/auth/register", {
+      .post("/api/auth/register", {
         id,
         username,
         password,
@@ -55,14 +55,7 @@ function Register({ host }) {
         router.push("/");
       })
       .catch((err) => {
-        // const message = err.response.data.message;
         console.log(err);
-        // toast({
-        //   title: message,
-        //   status: "error",
-        //   position: "top",
-        //   isClosable: true,
-        // });
       });
   };
   return (
