@@ -1,23 +1,22 @@
-import { Container } from "@chakra-ui/react";
+import { Container, Stack } from "@chakra-ui/react";
+import axios from "axios";
 import { useEffect, useState } from "react";
 import ItemCard from "../components/ItemCard";
+import AddSaleModal from "../components/modal/AddSale";
+
 import StoreLayout from "../components/StoreLayout";
 import useUser from "../context/useUser";
-import { getDb } from "../db/mongoose";
-import axios from "axios";
-export default function Home(props) {
+
+function MySale(props) {
   const user = useUser();
   const [items, setItems] = useState(null);
   const [sortby, setSortby] = useState("name");
   const [asc, setAsc] = useState(true);
   const [reload, setReload] = useState(false);
-
   useEffect(() => {
     axios
       .get("/api/items")
-      .then((res) => {
-        setItems(res.data);
-      })
+      .then((res) => setItems(res.data))
       .catch((err) => console.log(err));
   }, [reload]);
   const compare = (a, b) => {
@@ -25,6 +24,9 @@ export default function Home(props) {
   };
   return (
     <StoreLayout sort={{ sortby, setSortby }} order={{ asc, setAsc }}>
+      <Container maxW="" display={"flex"} flexWrap="wrap" gap={"6"} py="4">
+        <AddSaleModal update={{ reload, setReload }} />
+      </Container>
       <Container
         maxW=""
         display={"flex"}
@@ -38,8 +40,9 @@ export default function Home(props) {
             .sort(compare)
             .map(
               (item) =>
-                item.author != user && (
+                item.author == user && (
                   <ItemCard
+                    mysale
                     key={item._id}
                     id={item._id}
                     name={item.name}
@@ -47,7 +50,6 @@ export default function Home(props) {
                     price={item.price}
                     timestamp={item.timestamp}
                     desc={item.description}
-                    update={{ reload, setReload }}
                   />
                 )
             )}
@@ -55,14 +57,12 @@ export default function Home(props) {
     </StoreLayout>
   );
 }
-
+export default MySale;
 export async function getServerSideProps(c) {
   try {
-    const db = await getDb();
     const host = "http://" + c.req.headers.host;
     return {
       props: {
-        db: "http://" + db.connection.host,
         host,
       },
     };
