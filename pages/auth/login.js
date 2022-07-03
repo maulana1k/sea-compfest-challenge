@@ -102,21 +102,21 @@ function Login({ host }) {
 
 export default Login;
 
-export async function getServerSideProps(c) {
-  try {
-    const db = await getDb();
-    let host;
-    if (process.env.NODE_ENV === "development") {
-      host = "http://" + c.req.headers.host``;
-    } else if (process.env.NODE_ENV === "production") {
-      host = process.env.HOST;
-    }
-    return {
-      props: {
-        host,
-      },
-    };
-  } catch (err) {
-    console.log("err:", err);
-  }
-}
+// export async function getServerSideProps(c) {
+//   try {
+//     const db = await getDb();
+//     let host;
+//     if (process.env.NODE_ENV === "development") {
+//       host = "http://" + c.req.headers.host``;
+//     } else if (process.env.NODE_ENV === "production") {
+//       host = process.env.HOST;
+//     }
+//     return {
+//       props: {
+//         host,
+//       },
+//     };
+//   } catch (err) {
+//     console.log("err:", err);
+//   }
+// }
