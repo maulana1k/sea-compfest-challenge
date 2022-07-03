@@ -14,7 +14,7 @@ export default function Home(props) {
 
   useEffect(() => {
     axios
-      .get("/api/items")
+      .get(props.host + "/api/items")
       .then((res) => {
         setItems(res.data);
       })
@@ -59,19 +59,23 @@ export default function Home(props) {
 export async function getServerSideProps(c) {
   try {
     const db = await getDb();
-    const host = "http://" + c.req.headers.host;
+    let host;
+    if (process.env.NODE_ENV === "development") {
+      host = "http://" + c.req.headers.host``;
+    } else if (process.env.NODE_ENV === "production") {
+      host = process.env.HOST;
+    }
     return {
       props: {
-        db: "http://" + db.connection.host,
         host,
       },
     };
   } catch (err) {
     console.log("err:", err);
-    return {
-      props: {
-        db: "not connected",
-      },
-    };
+    // return {
+    //   props: {
+    //     db: "not connected",
+    //   },
+    // };
   }
 }
