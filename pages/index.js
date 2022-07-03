@@ -14,7 +14,7 @@ export default function Home(props) {
 
   useEffect(() => {
     axios
-      .get(props.host + "/api/items")
+      .get("/api/items")
       .then((res) => {
         setItems(res.data);
       })
