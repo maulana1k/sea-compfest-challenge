@@ -129,9 +129,20 @@ function Register({ host }) {
 export default Register;
 
 export async function getServerSideProps(c) {
-  return {
-    props: {
-      host: "http://" + c.req.headers.host,
-    },
-  };
+  try {
+    const db = await getDb();
+    let host;
+    if (process.env.NODE_ENV === "development") {
+      host = "http://" + c.req.headers.host``;
+    } else if (process.env.NODE_ENV === "production") {
+      host = process.env.HOST;
+    }
+    return {
+      props: {
+        host,
+      },
+    };
+  } catch (err) {
+    console.log("err:", err);
+  }
 }
